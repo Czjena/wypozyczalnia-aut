@@ -3,6 +3,7 @@ using System.ComponentModel.Design;
 using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace wypozyczalnia_aut
@@ -12,7 +13,7 @@ namespace wypozyczalnia_aut
         static void Main(string[] args)
         {
             Auta auta1 = new Auta();
-            
+
             auta1.Id = 1;
             auta1.Model = "Škoda Citigo";
             auta1.Segment = "Mini";
@@ -21,7 +22,7 @@ namespace wypozyczalnia_aut
             auta1.Status = "Dostępny";
 
             Auta auta2 = new Auta();
-            
+
             auta2.Id = 2;
             auta2.Model = "Toyota Aygo";
             auta2.Segment = "Mini";
@@ -30,7 +31,7 @@ namespace wypozyczalnia_aut
             auta2.Status = "Dostępny";
 
             Auta auta3 = new Auta();
-            
+
             auta3.Id = 3;
             auta3.Model = "Fiat 500";
             auta3.Segment = "Mini";
@@ -39,7 +40,7 @@ namespace wypozyczalnia_aut
             auta3.Status = "Dostępny";
 
             Auta auta4 = new Auta();
-            
+
             auta4.Id = 4;
             auta4.Model = "Ford Focus";
             auta4.Segment = "Kompakt";
@@ -48,7 +49,7 @@ namespace wypozyczalnia_aut
             auta4.Status = "Dostępny";
 
             Auta auta5 = new Auta();
-            
+
             auta5.Id = 5;
             auta5.Model = "Kia Ceed";
             auta5.Segment = "Kompakt";
@@ -57,7 +58,7 @@ namespace wypozyczalnia_aut
             auta5.Status = "Dostępny";
 
             Auta auta6 = new Auta();
-           
+
             auta6.Id = 6;
             auta6.Model = "Volkswagen Golf";
             auta6.Segment = "Kompakt";
@@ -66,7 +67,7 @@ namespace wypozyczalnia_aut
             auta6.Status = "Dostępny";
 
             Auta auta7 = new Auta();
-            
+
             auta7.Id = 7;
             auta7.Model = "Hyundai Kona Electric";
             auta7.Segment = "Kompakt";
@@ -75,7 +76,7 @@ namespace wypozyczalnia_aut
             auta7.Status = "Dostępny";
 
             Auta auta8 = new Auta();
-            
+
             auta8.Id = 8;
             auta8.Model = "Audi A6 Allroad";
             auta8.Segment = "Premium";
@@ -84,7 +85,7 @@ namespace wypozyczalnia_aut
             auta8.Status = "Dostępny";
 
             Auta auta9 = new Auta();
-            
+
             auta9.Id = 9;
             auta9.Model = "Mercedes E270 AMG";
             auta9.Segment = "Premium";
@@ -93,7 +94,7 @@ namespace wypozyczalnia_aut
             auta9.Status = "Dostępny";
 
             Auta auta10 = new Auta();
-            
+
             auta10.Id = 10;
             auta10.Model = "Tesla Model S";
             auta10.Segment = "Premium";
@@ -146,58 +147,143 @@ namespace wypozyczalnia_aut
 
             List<Osoby> listosob = new List<Osoby>();
 
-           listosob.Add(osoby1);
-           listosob.Add(osoby2);
-           listosob.Add(osoby3);
-           listosob.Add(osoby4);
-           listosob.Add(osoby5);
+            listosob.Add(osoby1);
+            listosob.Add(osoby2);
+            listosob.Add(osoby3);
+            listosob.Add(osoby4);
+            listosob.Add(osoby5);
 
-            Console.WriteLine("Witaj w wypożyczalni aut prosze wybrać opcje: \n1.Lista Klientów i samochodów \n2.Wynajmij Samochód");
-                int numerek = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Witaj w wypożyczalni aut prosze wybrać opcje: \n1.Lista Klientów i samochodów \n2.Wynajmij Samochód\n3.Zamknij Aplikacje");
+            int numerek = Convert.ToInt32(Console.ReadLine());
             do
             {
                 if (numerek == 1)
                 {
-                Console.Clear();
+                    Console.Clear();
                     Console.WriteLine("\nLista Aut");
                     foreach (Auta auta in listaaut)
                     {
-                    Console.WriteLine($"|" + auta.Id + " | " + auta.Model + " | " + auta.Segment + " | " + auta.Rodzajpaliwa + " | " + auta.Status + " | " + auta.Cenazadobe + "PLN");
+                        Console.WriteLine($"|" + auta.Id + " | " + auta.Model + " | " + auta.Segment + " | " + auta.Rodzajpaliwa + " | " + auta.Status + " | " + auta.Cenazadobe + "PLN");
                     }
                     Console.WriteLine("\nLista Klientów");
                     foreach (var osoby in listosob)
                     {
                         Console.WriteLine($"|" + osoby.Id + " | " + osoby.Imie + " | " + osoby.Dataprawajazd.ToShortDateString());
                     }
-                    Console.WriteLine("Witaj w wypożyczalni aut prosze wybrać opcje:\n1.Lista Klientów i samochodów \n2.Wynajmij Samochód");
-                numerek = Convert.ToInt32(Console.ReadLine());
-                
+                    Console.WriteLine("Witaj w wypożyczalni aut prosze wybrać opcje:\n1.Lista Klientów i samochodów \n2.Wynajmij Samochód\n3.Zamknij Aplikacje");
+                    numerek = Convert.ToInt32(Console.ReadLine());
+
                 }
-            }while (numerek == 1);
+            } while (numerek == 1);
             
-            
+            if (numerek == 3)
+            {
+                return;
+            }    
+
+
             if (numerek == 2)
             {
                 Console.Clear();
                 Console.WriteLine("Proszę podać nr klienta");
                 int numerklienta = Convert.ToInt32(Console.ReadLine());
-                
-                Osoby wybranaOsoba = listosob.FirstOrDefault(o => o.Id == numerklienta);
 
+                Osoby wybranaOsoba = listosob.FirstOrDefault(o => o.Id == numerklienta);
+                var roznicaLat = (DateTime.Now - wybranaOsoba.Dataprawajazd).TotalDays / 365;
+                    
                 if (wybranaOsoba != null)
                 {
-                    var roznicaLat = (DateTime.Now - wybranaOsoba.Dataprawajazd).TotalDays / 365;
-                    if (roznicaLat < 4)
-                    {
-                        Console.WriteLine("Dostępne auta dla klienta: \n1.Mini \n2.Kompakt");
-                        int Opcjaauta = Convert.ToInt32(Console.ReadLine());
+                    Console.Clear();
+                    string wybranySegment;
+                    do
+                    {  
+                        Console.WriteLine("Wybierz segment auta:");
+                        Console.WriteLine("1. Mini");
+                        Console.WriteLine("2. Kompakt");
+                        Console.WriteLine("3. Premium");
+                        int wyborSegmentu = Convert.ToInt32(Console.ReadLine());
 
+                        wybranySegment = wyborSegmentu switch
+                        {
+                            1 => "Mini",
+                            2 => "Kompakt",
+                            3 => "Premium",
+                            _ => null
+                        };
+
+                        {
+                            if (wybranySegment == "Premium" && roznicaLat < 4)
+                            {
+                                Console.WriteLine("Klienci z prawem jazdy krócej niż 4 lata nie mogą wynająć auta segmentu Premium.");
+                                wybranySegment = null;
+                            }
+
+                        }
+                        if (wybranySegment == null)
+                        {
+                            Console.WriteLine("Nieprawidłowy wybór segmentu.");
+                            
+                        }
+                    } while(wybranySegment == null);
+                        Console.Clear();
+                        Console.WriteLine("Wybierz rodzaj paliwa:");
+                        Console.WriteLine("1. Benzyna");
+                        Console.WriteLine("2. Diesel");
+                        Console.WriteLine("3. Elektryczny");
+                        int wyborPaliwa = Convert.ToInt32(Console.ReadLine());
+
+                        string wybranePaliwo = wyborPaliwa switch
+                        {
+                            1 => "Benzyna",
+                            2 => "Diesel",
+                            3 => "Elektryczny",
+                            _ => null
+                        };
+
+                        if (wybranePaliwo == null)
+                        {
+                            Console.WriteLine("Nieprawidłowy wybór paliwa.");
+                            return;
+                        }
+
+                        List<Auta> autaWSegmentcieIPaliwie = listaaut
+                            .Where(a => a.Segment.Equals(wybranySegment, StringComparison.OrdinalIgnoreCase) && a.Rodzajpaliwa.Equals(wybranePaliwo, StringComparison.OrdinalIgnoreCase))
+                            .ToList();
+
+                        if (autaWSegmentcieIPaliwie.Any())
+                        {
+                            Random rng = new Random();
+                            int indexLosowegoAuta = rng.Next(autaWSegmentcieIPaliwie.Count);
+                            Auta wylosowaneAuto = autaWSegmentcieIPaliwie[indexLosowegoAuta];
+                            Console.WriteLine("Na ile dni chcesz wypożyczyć auto:");
+                            var iloscdni = Convert.ToInt32(Console.ReadLine());
+
+                            DateTime Nowadata = DateTime.Now.AddDays(iloscdni);
+                            double Sumacen = wylosowaneAuto.Cenazadobe * iloscdni;
+                            if (iloscdni > 7)
+                            {
+                                iloscdni += 1;
+                                Nowadata = DateTime.Now.AddDays(iloscdni);
+                            }
+                            if (iloscdni > 30)
+                            {
+                                iloscdni += 3;
+                                Nowadata = DateTime.Now.AddDays(iloscdni);
+                            }
+                            if (roznicaLat < 4)
+                            {
+                                Sumacen *= 1.20;
+                            }
+                            Console.Clear();
+                            Console.WriteLine($"\nImię i nazwisko wynajmującego {wybranaOsoba.Imie}");
+                            Console.WriteLine($"\nWynajęte Auto: {wylosowaneAuto.Model}, \nSegment: {wylosowaneAuto.Segment}, \nRodzaj paliwa: {wylosowaneAuto.Rodzajpaliwa}, \nCena za dobę: {wylosowaneAuto.Cenazadobe}PLN, \nStatus: {wylosowaneAuto.Status}");
+                            Console.WriteLine($"Data zwrotu auta: {Nowadata.ToString("yyyy-MM-dd")}");
+                            Console.WriteLine($"Całkowita kwota wynajmu { Sumacen } PLN");
+                            Console.ReadLine( );
+                        }
+
+                    
                     }
-                    else
-                    {
-                        Console.WriteLine("Dostępne auta dla klienta: \n1.Mini \n2.Kompakt \n3.Premium");
-                    }
-  
                 }
                 else
                 {
@@ -206,7 +292,10 @@ namespace wypozyczalnia_aut
 
 
             }
-       
+
         }
     }
-}
+
+
+
+
